@@ -1,7 +1,7 @@
 package io.github.J_Branch.fit_log_api.controller;
 
 import io.github.J_Branch.fit_log_api.entity.User;
-import io.github.J_Branch.fit_log_api.repository.UserRepository;
+import io.github.J_Branch.fit_log_api.service.UserService;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,19 +15,19 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @PostMapping
     public User createUser(@RequestBody User user) {
-        return userRepository.save(user);
+        return userService.creatUser(user);
     }
 
     @GetMapping
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return userService.getAllUsers();
     }
 }
