@@ -5,8 +5,10 @@ import io.github.J_Branch.fit_log_api.repository.UserRepository;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import io.github.J_Branch.fit_log_api.dto.LoginRequest;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -19,12 +21,28 @@ public class UserService {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    public User creatUser(User user) {
-        String hashedPassword = passwordEncoder.encode(user.getPassword());
-
+    public User register(User user) {
+        String hashedPassword = passwordEncoder.encode((user.getPassword()));
         user.setPassword(hashedPassword);
-
         return userRepository.save(user);
+    }
+
+    public String login(LoginRequest request) {
+        Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
+
+        if (optionalUser.isEmpty()) {
+            return "User not found";
+        }
+
+        User user = optionalUser.get();
+
+        boolean passWordMatches = passwordEncoder.matches(request.getPassword(), user.getPassword());
+
+        if (!passWordMatches) {
+            return "Invalid password";
+        }
+
+        return "Login successful";
     }
 
     public List<User> getAllUsers() {
