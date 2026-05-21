@@ -2,6 +2,7 @@ package io.github.J_Branch.fit_log_api.service;
 
 import io.github.J_Branch.fit_log_api.entity.User;
 import io.github.J_Branch.fit_log_api.repository.UserRepository;
+import io.github.J_Branch.fit_log_api.util.JwtUtil;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class UserService {
             return "Invalid password";
         }
 
-        return "Login successful";
+        return JwtUtil.generateToken(user.getEmail());
     }
 
     public List<User> getAllUsers() {
